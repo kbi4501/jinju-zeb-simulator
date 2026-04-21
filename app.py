@@ -43,17 +43,17 @@ def create_pdf(report_data):
 
 # --- UI 레이아웃 ---
 st.set_page_config(page_title="진주형 ZEB 컨설턴트", layout="wide")
-st.title("🏡 진주시 단독주택 제로에너지(ZEB) 의사결정 시스템")
+st.title("진주시 단독주택 제로에너지(ZEB) 의사결정 시스템")
 
 # [사이드바]
 with st.sidebar:
-    st.header("📍 1. 기본 정보")
+    st.header("1. 기본 정보")
     address = st.text_input("건축 예정지 주소", "경상남도 진주시")
     current_bill = st.slider("현재 월평균 전기 요금 (원)", 10000, 300000, 80000, step=5000)
     area = st.number_input("건물 연면적 (㎡)", value=132) # 약 40평
     
     st.divider()
-    st.header("🛠️ 2. 기술 선택 (B안)")
+    st.header("2. 기술 선택 (B안)")
     chk_concrete = st.checkbox("저탄소 콘크리트 (LCA 개선)")
     chk_insulation = st.checkbox("강화 단열재 (패시브급)")
     chk_solar = st.checkbox("태양광 발전 (3kW)")
@@ -86,7 +86,7 @@ net_investment = extra_cost - applied_benefit
 payback = net_investment / real_saving if real_saving > 0 else 0
 
 # [메인 화면 시각화]
-st.subheader(f"✨ 예상 ZEB 등급: {zeb_grade} (자립률 {energy_indep*100:.0f}%)")
+st.subheader(f"예상 ZEB 등급: {zeb_grade} (자립률 {energy_indep*100:.0f}%)")
 st.progress(min(energy_indep/0.65, 1.0))
 
 c1, c2, c3, c4 = st.columns(4)
@@ -99,7 +99,7 @@ st.divider()
 
 col_left, col_right = st.columns(2)
 with col_left:
-    st.write("💰 **20년 누적 비용 비교 (시공비 포함)**")
+    st.write("**20년 누적 비용 비교 (시공비 포함)**")
     years = list(range(0, 21))
     total_a = [cost_a + (eng_cost_a * y) for y in years]
     total_b = [(cost_a + net_investment) + (eng_cost_b * y) for y in years]
@@ -109,7 +109,7 @@ with col_left:
     st.plotly_chart(fig, use_container_width=True)
 
 with col_right:
-    st.write("📊 **기술별 탄소 및 비용 상세**")
+    st.write("**기술별 탄소 및 비용 상세**")
     df_tech = pd.DataFrame({
         "기술항목": ["저탄소콘크리트", "강화단열", "태양광발전"],
         "시공비": [500, 1000, 600],
@@ -118,7 +118,7 @@ with col_right:
     st.table(df_tech)
 
 # [데이터 출처 섹션]
-with st.expander("📋 데이터 산출 근거 및 API 참조 기준"):
+with st.expander("데이터 산출 근거 및 API 참조 기준"):
     st.markdown("""
     - **위치 데이터:** Kakao Local API (진주시 행정구역 기준)
     - **전기 요금:** 한국전력공사 주택용 저압 요금표 (2024년 기준 누진제 적용)
@@ -139,7 +139,7 @@ report_content = {
     "Payback Period": f"{payback:.1f} Years"
 }
 
-if st.button("📄 분석 리포트 PDF 다운로드 (영문 기준)"):
+if st.button("분석 리포트 PDF 다운로드 (영문 기준)"):
     pdf_bytes = create_pdf(report_content)
     st.download_button(label="Click to Download PDF", data=pdf_bytes, file_name=f"ZEB_Report_{datetime.now().strftime('%Y%m%d')}.pdf", mime="application/pdf")
 
